@@ -45,7 +45,7 @@ namespace MiniGame
             for (int i = 0; i < pixely.Length; i++)
                 pixely[i] = Color.White;
             vyslednaTextura.SetData(pixely);
-            
+
             return vyslednaTextura;
         }
 
@@ -84,13 +84,15 @@ namespace MiniGame
             float zmenseniRychlosti = 0.5F;
             int pocetZmacknutychKlaves = klavesnice.GetPressedKeyCount();
 
+            bool nepresahlSeLimit = _rychlost > 5;
+
             if (pocetZmacknutychKlaves != 0)
             {
                 _rychlost += zvyseniRychlosti;
                 _rychlostKlepani += zvyseniRychlosti;
                 TresatDoStran();
             }
-            if (pocetZmacknutychKlaves == 0 && _rychlost > 5)
+            if (pocetZmacknutychKlaves == 0 && nepresahlSeLimit)
             {
                 _rychlost -= zmenseniRychlosti;
                 _rychlostKlepani -= zmenseniRychlosti;
