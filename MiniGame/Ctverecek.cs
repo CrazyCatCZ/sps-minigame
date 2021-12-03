@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace MiniGame
 {
@@ -10,7 +11,9 @@ namespace MiniGame
         private GraphicsDevice _zobrazovac { get; set; }
 
         private int _velikost { get; set; }
-        private int _rychlost { get; set; }
+        private float _rychlost { get; set; }
+
+        private float _rychlostKlepani { get; set; }
 
         private Color _barva { get; set; }
 
@@ -19,10 +22,11 @@ namespace MiniGame
 
         private SmeroveOvladani _ovladaniPohybu { get; set; }
 
-        public Ctverecek(int velikost, int rychlost, Vector2 pozice, SmeroveOvladani ovladaniPohybu, Rectangle omezeniPohybu, Color barva, GraphicsDevice zobrazovac)
+        public Ctverecek(int velikost, float rychlost, float rychlostKlepani, Vector2 pozice, SmeroveOvladani ovladaniPohybu, Rectangle omezeniPohybu, Color barva, GraphicsDevice zobrazovac)
         {
             _velikost = velikost;
             _rychlost = rychlost;
+            _rychlostKlepani = rychlostKlepani;
 
             _ovladaniPohybu = ovladaniPohybu;
 
@@ -62,14 +66,61 @@ namespace MiniGame
                 _pozice += _rychlost * Vector2.Normalize(smerPohybu);
         }
 
+
         public void Aktualizovat(KeyboardState klavesnice)
         {
+
             Pohnout(klavesnice);
+            Zatresat(klavesnice);
         }
 
         public void Vykreslit(SpriteBatch _vykreslovac)
         {
             _vykreslovac.Draw(_textura, _pozice, _barva);
+        }
+        private void Zatresat(KeyboardState klavesnice)
+        {
+            float zvyseniRychlosti = 0.01F;
+            float zmenseniRychlosti = 0.5F;
+            int pocetZmacknutychKlaves = klavesnice.GetPressedKeyCount();
+
+            if (pocetZmacknutychKlaves != 0)
+            {
+                _rychlost += zvyseniRychlosti;
+                _rychlostKlepani += zvyseniRychlosti;
+                TresatDoStran();
+            }
+            if (pocetZmacknutychKlaves == 0 && _rychlost > 5)
+            {
+                _rychlost -= zmenseniRychlosti;
+                _rychlostKlepani -= zmenseniRychlosti;
+            }
+        }
+        private void TresatDoStran()
+        {
+            Random random = new Random();
+            Vector2 smerPohybu = Vector2.Zero;
+            int nahodnaMoznost = random.Next(1, 5);
+
+            switch (nahodnaMoznost)
+            {
+                case 1:
+                    smerPohybu -= Vector2.UnitY;
+                    break;
+                case 2:
+                    smerPohybu += Vector2.UnitX;
+                    break;
+                case 3:
+                    smerPohybu += Vector2.UnitY;
+                    break;
+                case 4:
+                    smerPohybu -= Vector2.UnitX;
+                    break;
+            }
+            if (smerPohybu != Vector2.Zero)
+            {
+                _pozice += _rychlostKlepani * Vector2.Normalize(smerPohybu);
+            }
         }
     }
 }

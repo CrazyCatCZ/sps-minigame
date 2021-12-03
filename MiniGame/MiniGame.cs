@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace MiniGame
 {
@@ -36,7 +37,7 @@ namespace MiniGame
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _ctverecek = new Ctverecek(
-                50, 5,
+                50, 5, 2,
                 new Vector2((_sirkaOkna - 50) / 2, (_vyskaOkna - 50) / 2),
                 new SmeroveOvladani(Keys.Left, Keys.Right, Keys.Up, Keys.Down),
                 new Rectangle(0, 0, _sirkaOkna, _vyskaOkna),
